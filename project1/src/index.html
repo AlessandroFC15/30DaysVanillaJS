@@ -1,0 +1,121 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background: url(img/background.jpg) no-repeat fixed center;
+        }
+
+        .box-container {
+            width: 100px;
+            height: 100px;
+            border: 2px solid black;
+            margin: 10px;
+            display: inline-block;
+            transition: all .2s ease-in;
+        }
+
+        .key-pressed {
+            border: 3px solid gold;
+            transition: all .2s ease-in;
+        }
+
+        .key {
+            font-size: 48px;
+            color: white;
+        }
+
+        .soundDescription {
+            color: gold;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container" style="position: relative; height: 100%">
+    <div class="col-md-10 col-md-offset-2" style="position: absolute; top: 50%; transform: translateY(-50%);" id="musicContainer">
+
+    </div>
+</div>
+
+<script>
+    function createKeyDiv (key, key_code, sound_description) {
+        var outerDiv = document.createElement('div');
+        outerDiv.className = "box-container";
+
+        var keyDiv = document.createElement('div');
+        keyDiv.className = "key text-center";
+        keyDiv.innerHTML = key;
+
+        var soundDescriptionDiv = document.createElement('div');
+        soundDescriptionDiv.className = "soundDescription text-center";
+        soundDescriptionDiv.innerHTML = sound_description;
+
+        outerDiv.appendChild(keyDiv);
+        outerDiv.appendChild(soundDescriptionDiv);
+        document.getElementById('musicContainer').appendChild(outerDiv)
+
+        return outerDiv;
+    }
+
+    var dados_sons_musicais = [
+        {
+            key: 'A',
+            key_code: 97,
+            sound_description: 'Boom',
+            sound: new Audio('audio/clap.wav')
+        },
+
+        {
+            key: 'S',
+            key_code: 115,
+            sound_description: "Hello",
+            sound: new Audio('audio/hihat.wav')
+        }
+    ];
+
+    for (let i = 0; i < dados_sons_musicais.length; i++) {
+        let dados = dados_sons_musicais[i];
+
+        dados_sons_musicais[i]['div'] = createKeyDiv(dados.key, dados.key_code, dados.sound_description);
+    }
+
+    document.documentElement.onkeypress = function (e) {
+        for (let i = 0; i < dados_sons_musicais.length; i++) {
+            if (e.keyCode == dados_sons_musicais[i].key_code) {
+                dados_sons_musicais[i].sound.play();
+
+                dados_sons_musicais[i]['div'].className += " key-pressed";
+
+                setTimeout(function(){
+                    dados_sons_musicais[i]['div'].className = "box-container";
+                }, 300);
+            }
+        }
+    }
+
+</script>
+
+
+</body>
+</html>
