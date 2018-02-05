@@ -22,100 +22,112 @@
         }
 
         body {
-            background: url(img/background.jpg) no-repeat fixed center;
+            background: url('http://i.imgur.com/b9r5sEL.jpg') no-repeat fixed center;
         }
 
         .box-container {
             width: 100px;
-            height: 100px;
+            padding: 10px;
             border: 2px solid black;
             margin: 10px;
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
             transition: all .2s ease-in;
+            text-align: center;
         }
 
         .key-pressed {
+            width: 110px;
             border: 3px solid gold;
             transition: all .2s ease-in;
         }
 
         .key {
-            font-size: 48px;
+            font-size: 32px;
             color: white;
+            margin: 0;
+            flex: 0.7;
         }
 
         .soundDescription {
             color: gold;
+            font-size: small;
+            flex: 0.3;
+            margin: 0;
         }
     </style>
 
 </head>
 <body>
 
-<div class="container" style="position: relative; height: 100%">
-    <div class="col-md-10 col-md-offset-2" style="position: absolute; top: 50%; transform: translateY(-50%);" id="musicContainer">
-
-    </div>
+<div class="container" style="height: inherit; display: flex; align-items: center; justify-content: space-evenly">
 </div>
 
 <script>
-    function createKeyDiv (key, key_code, sound_description) {
-        var outerDiv = document.createElement('div');
-        outerDiv.className = "box-container";
+    function createKeyContainer(key, soundDescription, audioFileName, keyCode) {
+        console.log('createKeyContainer');
 
-        var keyDiv = document.createElement('div');
-        keyDiv.className = "key text-center";
-        keyDiv.innerHTML = key;
+        var container = document.getElementsByClassName('container')[0];
 
-        var soundDescriptionDiv = document.createElement('div');
-        soundDescriptionDiv.className = "soundDescription text-center";
-        soundDescriptionDiv.innerHTML = sound_description;
+        var keyContainer = document.createElement('div');
+        keyContainer.className = "box-container text-uppercase";
+        keyContainer.id = key;
 
-        outerDiv.appendChild(keyDiv);
-        outerDiv.appendChild(soundDescriptionDiv);
-        document.getElementById('musicContainer').appendChild(outerDiv)
+        var keyName = document.createElement("p");
+        keyName.innerHTML = key;
+        keyName.className = "key";
 
-        return outerDiv;
+        var soundDescriptionDiv = document.createElement("p");
+        soundDescriptionDiv.innerHTML = soundDescription;
+        soundDescriptionDiv.className = "soundDescription text-uppercase";
+
+        keyContainer.appendChild(keyName);
+        keyContainer.appendChild(soundDescriptionDiv);
+
+        container.appendChild(keyContainer);
     }
 
-    var dados_sons_musicais = [
-        {
-            key: 'A',
-            key_code: 97,
-            sound_description: 'Boom',
-            sound: new Audio('audio/clap.wav')
-        },
+    (function() {
+        var audioFilesFolder = "audio/";
 
-        {
-            key: 'S',
-            key_code: 115,
-            sound_description: "Hello",
-            sound: new Audio('audio/hihat.wav')
+        var keysData = [
+            {key: "a", soundDescription: "clap", audioFilename: "clap.wav", keyCode: 65},
+            {key: "s", soundDescription: "hihat", audioFilename: "hihat.wav", keyCode: 83},
+            {key: "d", soundDescription: "kick", audioFilename: "kick.wav", keyCode: 68},
+            {key: "f", soundDescription: "openhat", audioFilename: "openhat.wav", keyCode: 70},
+            {key: "g", soundDescription: "boom", audioFilename: "boom.wav", keyCode: 71},
+            {key: "h", soundDescription: "ride", audioFilename: "ride.wav", keyCode: 72},
+            {key: "j", soundDescription: "snare", audioFilename: "snare.wav", keyCode: 74},
+            {key: "k", soundDescription: "tom", audioFilename: "tom.wav", keyCode: 75},
+            {key: "l", soundDescription: "tink", audioFilename: "tink.wav", keyCode: 76},
+        ];
+
+        for (var i = 0; i < keysData.length; i++) {
+            var keyData = keysData[i];
+
+            createKeyContainer(keyData.key, keyData.soundDescription, keyData.audioFilename, keyData.keyCode);
         }
-    ];
 
-    for (let i = 0; i < dados_sons_musicais.length; i++) {
-        let dados = dados_sons_musicais[i];
+        document.onkeypress = function (e) {
+            for (var i = 0; i < keysData.length; i++) {
+                var keyData = keysData[i];
 
-        dados_sons_musicais[i]['div'] = createKeyDiv(dados.key, dados.key_code, dados.sound_description);
-    }
+                if (e.key.toLowerCase() === keyData.key) {
+                    var audio = new Audio(audioFilesFolder + keyData.audioFilename);
+                    audio.play();
 
-    document.documentElement.onkeypress = function (e) {
-        for (let i = 0; i < dados_sons_musicais.length; i++) {
-            if (e.keyCode == dados_sons_musicais[i].key_code) {
-                dados_sons_musicais[i].sound.play();
+                    var divContainer = document.getElementById(keyData.key);
 
-                dados_sons_musicais[i]['div'].className += " key-pressed";
-
-                setTimeout(function(){
-                    dados_sons_musicais[i]['div'].className = "box-container";
-                }, 300);
+                    divContainer.className += " key-pressed";
+                    
+                    setTimeout((function () {
+                        divContainer.className = divContainer.className.replace("key-pressed", "");
+                    }), 300)
+                }
             }
-        }
-    }
-
+        };
+    })();
 </script>
-
 
 </body>
 </html>
