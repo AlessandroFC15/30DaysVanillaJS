@@ -37,7 +37,7 @@
         }
 
         .key-pressed {
-            width: 110px;
+            transform: scale(1.1);
             border: 3px solid gold;
             transition: all .2s ease-in;
         }
@@ -72,6 +72,14 @@
         var keyContainer = document.createElement('div');
         keyContainer.className = "box-container text-uppercase";
         keyContainer.id = key;
+
+        keyContainer.addEventListener("transitionend", function (e) {
+            if (e.propertyName !== "transform") {
+                return;
+            }
+
+            this.classList.remove("key-pressed");
+        });
 
         var keyName = document.createElement("p");
         keyName.innerHTML = key;
@@ -109,21 +117,17 @@
         }
 
         document.onkeypress = function (e) {
-            for (var i = 0; i < keysData.length; i++) {
-                var keyData = keysData[i];
+            var keyPressed = keysData.find(function (element) {
+                return element.key === e.key.toLowerCase();
+            });
 
-                if (e.key.toLowerCase() === keyData.key) {
-                    var audio = new Audio(audioFilesFolder + keyData.audioFilename);
-                    audio.play();
+            if (keyPressed) {
+                var audio = new Audio(audioFilesFolder + keyPressed.audioFilename);
+                audio.play();
 
-                    var divContainer = document.getElementById(keyData.key);
+                var divContainer = document.getElementById(keyPressed.key);
 
-                    divContainer.className += " key-pressed";
-                    
-                    setTimeout((function () {
-                        divContainer.className = divContainer.className.replace("key-pressed", "");
-                    }), 300)
-                }
+                divContainer.classList.add("key-pressed");
             }
         };
     })();
