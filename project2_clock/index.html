@@ -1,0 +1,80 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    <style>
+        html, body {
+            height:100%;
+        }
+
+        body {
+            background:#018DED url(http://unsplash.it/1500/1000?image=881&blur=50);
+            background-size:cover;
+        }
+
+        #clock {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border-radius: 100px;
+            border: 15px solid white;
+        }
+
+        .pointer {
+            border-radius: 12px;
+            transition: all 1s ease;
+            transform-origin: bottom;
+            position: absolute;
+            width: 5px;
+            height: 48%;
+            background-color: black;
+            left: calc(50% - 5px);;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container" style="height: inherit; display: flex; align-items: center; justify-content: space-evenly">
+    <div id="clock">
+        <div id="pointerSeconds" class="pointer"></div>
+        <div id="pointerMinutes" class="pointer"></div>
+        <div id="pointerHour" class="pointer" ></div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        setInterval(function () {
+            var d = new Date();
+
+            var hour = d.getHours() % 12;
+            var hourAngle = (hour) * (360 / 12);
+
+            document.getElementById("pointerHour").style.transform = "rotate(" + hourAngle +"deg)";
+
+            var minutes = d.getMinutes();
+            var minutesAngle = (minutes) * (360 / 60);
+            document.getElementById("pointerMinutes").style.transform = "rotate(" + minutesAngle +"deg)";
+
+            var seconds = d.getSeconds();
+            var secondsAngle = (seconds) * (360 / 60);
+            document.getElementById("pointerSeconds").style.transform = "rotate(" + secondsAngle +"deg)";
+        }, 500)
+    })();
+</script>
+
+</body>
+</html>
